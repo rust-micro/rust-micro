@@ -1,7 +1,6 @@
 use args::{get_cli_arguments, Commands};
 use config::Conf;
-use std::fs::File;
-use std::io::Write;
+use std::path::PathBuf;
 
 pub struct App {
     cli: args::CliArgs,
@@ -19,6 +18,10 @@ impl App {
             println!("Debugging information is on.");
         }
 
+        if self.cli.debug >= 1 {
+            println!("Used config file: {}", self.cli.config_file.display());
+        }
+
         if self.cli.config_file.is_file() {
             self.config = Conf::load(&self.cli.config_file.to_str().unwrap())
                 .map_err(|e| println!("{}", e))
@@ -27,16 +30,14 @@ impl App {
 
         match &self.cli.command {
             Some(Commands::Init) => {
-                let config_file = &self.cli.config_file;
+                let path = match option_env!("MICRO_CONFIG_FILE") {
+                    Some(path) => PathBuf::from(path),
+                    None => self.cli.config_file.clone(),
+                };
 
-                if config_file.exists() {
-                    println!("Config file already exists.");
-                } else {
-                    let mut file = File::create(config_file).unwrap();
-                    let toml = Conf::get_toml();
-                    file.write_all(toml.as_bytes()).unwrap();
-                    println!("Config file created.");
-                }
+                Conf::create_config_file(&path)
+                    .map_err(|e| eprintln!("{}", e))
+                    .ok();
             }
             Some(Commands::New { name }) => match &self.config {
                 Some(config) => {
@@ -47,9 +48,7 @@ impl App {
                     println!("No configuration file found.");
                 }
             },
-            None => {
-                println!("No command given.");
-            }
+            None => {}
         }
     }
 }

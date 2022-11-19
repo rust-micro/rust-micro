@@ -1,5 +1,7 @@
 use confique::{toml::FormatOptions, Config};
-use std::path::Path;
+use std::fs::File;
+use std::io::Write;
+use std::path::{Path, PathBuf};
 
 /// The configuration for the micro cli.
 #[derive(Config)]
@@ -24,5 +26,17 @@ impl Conf {
         let r = Conf::builder().env().file(path).load();
 
         r.map_err(|e| format!("Error: {:?}", e))
+    }
+
+    pub fn create_config_file(path: &PathBuf) -> Result<String, String> {
+        if path.exists() {
+            Err("Config file already exists.".to_string())
+        } else {
+            let mut file = File::create(path).map_err(|e| format!("Error: {:?}", e))?;
+            let toml = Conf::get_toml();
+            file.write_all(toml.as_bytes())
+                .map_err(|e| format!("Error: {:?}", e))?;
+            Ok("Config file created.".to_string())
+        }
     }
 }

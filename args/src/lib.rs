@@ -7,6 +7,7 @@ use std::path::PathBuf;
 #[command(version = "1.0")]
 #[command(author = "Peter Heiss <peter.heiss@uni-muenster.de>")]
 #[command(about = "A cli for creating microservices in rust.")]
+#[command(arg_required_else_help(true))]
 pub struct CliArgs {
     #[cfg(target_os = "linux")]
     /// Sets a custom config file.
@@ -33,10 +34,8 @@ fn parse_pathbuf(s: &str) -> Result<PathBuf, String> {
 
 #[derive(Subcommand)]
 pub enum Commands {
-    /// Create the config file, if it is not already present in currently used config directory.
-    /// The config file will be created with default values.
-    /// If you want to change the default values, you can edit the config file.
-    /// See --config-file for more information about config file location.
+    /// Create the config file with default values.
+    /// See --config-file option for more information about config file location.
     Init,
     /// Create a new microservice
     New {

@@ -10,7 +10,9 @@
       <sourceFolder url="file://$MODULE_DIR$/lib/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/micro" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/micro/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/greeter/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

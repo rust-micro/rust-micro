@@ -8,3 +8,11 @@ edition = "2021"
 [workspace]
 members = ["micro", "config", "args"]
 default-members = ["micro"]
+
+[[bin]]
+name = "micro"
+path = "micro/src/main.rs"
+
+[lib]
+name = "micro"
+path = "micro/src/lib.rs"

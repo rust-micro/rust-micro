@@ -345,6 +345,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "greeter"
+version = "0.1.0"
+dependencies = [
+ "micro",
+ "prost",
+ "tokio",
+ "tonic",
+]
+
+[[package]]
 name = "h2"
 version = "0.3.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -574,6 +584,7 @@ dependencies = [
  "axum",
  "config",
  "hyper",
+ "pin-project",
  "prost",
  "thiserror",
  "tokio",
@@ -915,10 +926,6 @@ dependencies = [
  "web-sys",
  "winapi",
 ]
-
-[[package]]
-name = "rust-micro"
-version = "0.1.0"
 
 [[package]]
 name = "rustls"

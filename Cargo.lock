@@ -574,6 +574,7 @@ dependencies = [
  "axum",
  "config",
  "hyper",
+ "pin-project",
  "prost",
  "thiserror",
  "tokio",

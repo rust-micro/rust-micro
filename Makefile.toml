@@ -1,0 +1,13 @@
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+
+[tasks.greeter-server]
+command = "cargo"
+args = ["run", "-p", "greeter", "--bin", "server" ]
+
+[tasks.greeter-client]
+command = "cargo"
+args = ["run", "-p", "greeter", "--bin", "client" ]
+
+[tasks.greeter]
+run_task = { name = ["greeter-server", "greeter-client"], parallel = true }

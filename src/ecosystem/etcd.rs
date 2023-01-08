@@ -1,5 +1,6 @@
 use bollard::container::StartContainerOptions;
 use bollard::image::CreateImageOptions;
+use bollard::models::PortBinding;
 use bollard::{
     container::{Config, CreateContainerOptions, ListContainersOptions},
     models::{HostConfig, Mount, MountTypeEnum},
@@ -33,7 +34,7 @@ async fn is_etcd_container_created() -> bool {
 
     let containers = &docker
         .list_containers(Some(ListContainersOptions {
-            all: false,
+            all: true,
             filters: list_container_filters,
             ..Default::default()
         }))
@@ -102,17 +103,34 @@ pub async fn start() {
             name: CONTAINER_NAME,
         });
 
-        let mut exposed_ports = HashMap::new();
-        exposed_ports.insert("2379/tcp", HashMap::new());
-        exposed_ports.insert("2380/tcp", HashMap::new());
+        let mut port_bindings = HashMap::new();
+        port_bindings.insert(
+            String::from("2379/tcp"),
+            Some(vec![PortBinding {
+                host_ip: Some(String::from("0.0.0.0")),
+                host_port: Some(String::from("2379")),
+            }]),
+        );
+        port_bindings.insert(
+            String::from("2380/tcp"),
+            Some(vec![PortBinding {
+                host_ip: Some(String::from("0.0.0.0")),
+                host_port: Some(String::from("2380")),
+            }]),
+        );
 
         // Taken from https://etcd.io/docs/v3.5/op-guide/container/#docker
-        let cmd = vec!["etcd", "--data-dir=/etcd-data"];
+        let cmd = vec![
+            "etcd",
+            "--data-dir=/etcd-data",
+            "--advertise-client-urls=http://0.0.0.0:2379",
+            "--listen-client-urls=http://0.0.0.0:2379",
+        ];
 
         let config = Config {
             image: Some(IMAGE_NAME),
-            exposed_ports: Some(exposed_ports),
             host_config: Some(HostConfig {
+                port_bindings: Some(port_bindings),
                 mounts: Some(vec![Mount {
                     target: Some("/etcd-data".to_string()),
                     source: Some(VOLUME_NAME.to_string()),

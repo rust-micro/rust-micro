@@ -1,4 +1,4 @@
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{Request, Response, Status};
 
 use hello_world::greeter_server::{Greeter, GreeterServer};
 use hello_world::{HelloReply, HelloRequest};
@@ -30,21 +30,12 @@ impl Greeter for MyGreeter {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // let addr = "[::1]:50051".parse()?;
-    let mut service = Micro::new("rust.server.srv.greeter");
-
     // Initialize service, register it in etcd for service discovery and handles command line args.
-    service
-        .init()
-        .await?
-        // let greeter = MyGreeter::default();
-        // Server::builder()
-        //     .add_service(GreeterServer::new(greeter))
+    Micro::new("rust.micro.srv.greeter")
         .register_handler(GreeterServer::new(MyGreeter::default()))
-        //     .serve(addr)
-        //     .await?;
         .run()
-        .await?;
+        .await
+        .expect("Failed to run service");
 
     Ok(())
 }

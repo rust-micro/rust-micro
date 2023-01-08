@@ -13,7 +13,7 @@ Rust Micro provides the core requirements for distributed systems development in
 ## Installation
 
 ```bash
-$ cargo install rust-micro
+$ cargo install micro cargo-make
 $ cargo micro check # checks the requirements
 ```
 
@@ -23,6 +23,12 @@ $ cargo micro check # checks the requirements
 $ cargo micro new my-project
 $ cd my-project
 $ cargo micro run # sets up all needed services and starts all bins in cargo.toml
+```
+
+### Examples
+
+```bash
+$ cargo make greeter
 ```
 
 
